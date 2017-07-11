@@ -1,0 +1,20 @@
+<?php
+
+// Password Protected Page Message
+
+function my_password_form() {
+    global $post;
+    $label = 'pwbox-'.( empty( $post->ID ) ? rand() : $post->ID );
+    $o = '<form action="' . esc_url( site_url( 'wp-login.php?action=postpass', 'login_post' ) ) . '" method="post">
+    ' . __( "Welcome to the Members Area." ) . '
+	<p>This shop is password protected. To view it please enter your password below:</p>
+    <label for="' . $label . '">' . __( "Password:&nbsp;" ) . ' </label><input name="post_password" id="' . $label . '" type="password" size="20" maxlength="20" /><input type="submit" name="Submit" value="' . esc_attr__( "Submit" ) . '" />
+    </form>
+	<p><strong>Free freight</strong> for orders of 6 bottles or more.</p>
+	<p><strong>You must be 18 years or older to enter the online shop. By clicking ‘Submit’ you are verifying this.</strong></p>
+    ';
+    return $o;
+}
+add_filter( 'the_password_form', 'my_password_form' );
+
+?>

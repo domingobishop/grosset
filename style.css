@@ -1,0 +1,386 @@
+/*
+Theme Name:     Grosset v3
+Theme URI:      http://chrisbishop.me.uk/
+Description:    Grosset v3 - Child theme for the Twenty Thirteen theme 
+Author:         Chris Bishop
+Author URI:     http://chrisbishop.me.uk/
+Template:       twentythirteen
+Version:        0.3.0
+License:		Creative Commons Attribution-Share Alike 3.0 (http://creativecommons.org/licenses/by-sa/3.0/. Feel free to make any changes.
+*/
+
+@import url("css/bootstrap.min.css");
+@import url("../twentythirteen/style.css");
+
+/**
+ * Global
+ * ----------------------------------------------------------------------------
+ */
+ 
+ body {
+	font-family: "Open Sans", Helvetica, Arial, sans-serif, sansserif;
+	/*The weights are 300 (light), 400 (normal), 600 (semibold), and 700 (bold) and the only acceptable CSS keyword is "normal". */
+	text-rendering: optimizeLegibility;
+	color: #444;
+	font-size: 16px;
+	line-height: 1.5;
+}
+html, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
+    font-family: "Open Sans", Helvetica, Arial, sans-serif, sansserif;	 
+}
+a, a:hover, a:focus, a:active, a:visited, .entry-title a, .entry-title a:hover, .entry-meta a, .entry-meta a:hover, .site-footer .widget a {
+	color: #3B73B9 !important;
+}
+h1 {
+	font-size: 26px;
+	color: #3B73B9;
+}
+h2 {
+	font-size: 22px;
+}
+button, input[type="submit"], input[type="button"], input[type="reset"] {
+	background: #95a5a6;
+	border-bottom: 3px solid #798d8f;
+}
+button, input, textarea {
+	border: 2px solid #eee;
+}
+button:hover, button:focus, input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:focus, input[type="button"]:focus, input[type="reset"]:focus, button:active, input[type="submit"]:active, input[type="button"]:active, input[type="reset"]:active {
+  background: #3366cc;
+  border: none;
+  border-bottom: 3px solid #003366;
+}
+
+/**
+ * Hyphenation
+ * ----------------------------------------------------------------------------
+ */
+
+h1, h2, h3, h4, p, ul, li, ol, dl, blockquote, .post-statement, .statement {
+	-webkit-hyphens: none;
+   -moz-hyphens: none;
+	-ms-hyphens:none;
+	hyphens: none;
+	word-break: keep-all;
+}
+
+.site-content article {
+   word-wrap: normal;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+   hyphens: none;
+}
+
+.widget-area .widget {
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	hyphens: none;
+	word-wrap: normal;
+}
+
+/**
+ * Nav
+ * ----------------------------------------------------------------------------
+ */
+.site {
+	max-width: 100%;
+}
+.main-navigation {
+	min-height: 62px;
+}
+.navbar {
+	background-color: #fff;
+	-webkit-box-shadow: 0px 5px 7px 0px rgba(0, 0, 0, 0.15);
+	-moz-box-shadow: 0px 5px 7px 0px rgba(0, 0, 0, 0.15);
+	box-shadow: 0px 5px 7px 0px rgba(0, 0, 0, 0.15);
+	max-width: 100%;
+}
+.nav-menu li a {
+	color: #141412;
+	padding: 23px 20px 22px 20px;
+}
+.nav-menu li a img {
+	height: 20px;
+	width: auto;
+}
+.nav-menu li.glogo a {
+	padding: 20px;
+}
+.nav-menu li:hover > a, .nav-menu li a:hover, .nav-menu li:focus > a, .nav-menu li a:focus {
+	background-color: #fff;
+	color: #3B73B9;
+	border-bottom: 2px solid #3B73B9;
+	transition: all .2s;
+}
+.nav-menu li.glogo:hover > a, .nav-menu li.glogo a:hover, .nav-menu li.glogo:focus > a, .nav-menu li.glogo a:focus {
+	background-color: #fff;
+	color: #3B73B9;
+	border-bottom: 0;
+}
+ul.nav-menu, div.nav-menu > ul {
+	padding: 0;
+}
+@media (max-width: 863px) {
+	.nav-menu li a {
+		padding: 23px 7px 22px 7px;
+	}
+}
+@media (max-width: 643px) {
+	.nav-menu li.glogo a {
+		display: none;
+	}
+	.main-navigation, .navbar {
+		min-height: 45px;
+	}
+	.nav-menu li a {
+		padding: 15px 10px;
+	}
+	.toggled-on .nav-menu > li a:hover, .toggled-on .nav-menu > ul a:hover {
+		background-color: #3B73B9;
+		color: #fff;
+		border-bottom: 0;
+	}
+	.menu-toggle {
+		font-size: 20px;
+	}
+}
+
+
+/**
+ * Header
+ * ----------------------------------------------------------------------------
+ */
+
+.header-img {
+	background: url(img/bg.jpg) no-repeat center center #eee;
+	background-size: cover;
+	margin: 60px 0 0 0;
+	height: 100px;
+	overflow: hidden;
+}
+.home .header-img {
+	display: none;
+	height: 170px;
+}
+.home .header-img .glogo-trans {
+	background: url(img/Grosset-Logo-trans.png) no-repeat center center;
+	background-size: 100%;
+	width: 100%;
+	height: 170px;
+}
+.header-img .container {
+	max-width:1080px;
+}
+.home .glogo-trans {
+	background: url(img/Grosset-Logo-trans.png) no-repeat center center;
+	background-size: 100%;
+	position: absolute;
+	top: 30px;
+	left: 50%;
+	z-index: 15;
+	width: 60%;
+	margin-left: -30%;
+	padding-left: 0;
+	list-style: none;
+	text-align: center;
+	height: 170px;
+}
+@media (max-width: 960px) {
+	.home .glogo-trans {
+		top: 15px;
+		height: 150px;
+	}
+}
+@media (max-width: 768px) {
+	.carousel h3 {
+		font-size: 18px;
+	}
+}
+@media (max-width: 643px) {
+	.header-img {
+		margin: 45px 0 0 0;
+		height: 100px;
+	}
+	.home .glogo-trans {
+		top: 15px;
+		height: 100px;
+	}
+}
+
+/**
+ * Footer
+ * ----------------------------------------------------------------------------
+ */
+ 
+.site-footer .widget-area, .sidebar .site-footer {
+	text-align: center;
+}
+.site-footer .widget-area {
+	margin: 0 auto !important;
+	max-width: 1040px !important;
+	width: 100% !important;
+	left: 0px !important;
+}
+.site-footer {
+	background-color: #eee;
+}
+.site-footer .sidebar-container {
+	background-color: #ddd;
+}
+.site-footer .widget .widget-title {
+	font: 300 normal 20px "Source Sans Pro", Helvetica, sans-serif;
+}
+.site-footer p img {
+	
+}
+ 
+/**
+ * Home
+ * ----------------------------------------------------------------------------
+ */
+
+.marketing {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+element.style {
+}
+.carousel-inner > .item > img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	min-width: 100%;
+	height: 400px;
+}
+.carousel .item {
+	height: 400px;
+}
+.carousel-caption {
+	text-shadow: 5px 2px 10px #000000;
+}
+.mbox {
+	border:solid 1px #ddd;
+	border-radius: 5px;
+	padding: 18px 12px;
+}
+.mbox p {
+	min-height: 72px;
+}
+.mbox a, .mbox a:visited, a.btn-default, a:visited.btn-default {
+	color: #fff !important;
+}
+
+/**
+ * Wines page
+ * ----------------------------------------------------------------------------
+ */
+
+.col-wine {
+	float: left;
+	width: 11.111%;
+	position: relative;
+	min-height: 1px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+.wines {
+	width: 98%;
+	max-width: 1600px;
+}
+.col-wine h5 {
+		/* text-align: center; */
+}
+.col-wine a img {
+		margin: 0 auto;
+}
+@media (max-width: 992px) {
+	.wines h5 {
+		font-size: 14px;
+	}
+	.wines p {
+		display: none;
+	}
+}
+@media (max-width: 768px) {
+	.col-wine {
+		width: 33.333%;
+		min-height: 167px;
+	}
+	.clear-wine {
+		clear: both;
+	}
+	.wines h5 {
+		font-size: 18px;
+	}
+	.wines p {
+		display: none;
+	}
+	.col-wine .img-responsive {
+		margin: 0 auto;
+	}
+}
+
+/**
+ * Page & Posts
+ * ----------------------------------------------------------------------------
+ */
+ 
+ .page, .post {
+	 min-height: 550px;
+ }
+ .no-sidebar .entry-header, .no-sidebar .entry-content, .no-sidebar .entry-summary, .no-sidebar .entry-meta {
+  max-width: 1040px;
+  padding: 0 60px 0 60px;
+}
+.no-sidebar .entry-header, .no-sidebar .entry-content, .no-sidebar .entry-summary, .no-sidebar .entry-meta {
+  max-width: 1040px;
+  padding: 0 60px 0 60px;
+}
+.wcopc .product-name, .wcopc .amount {
+  font-size: 18px;
+}
+.woocommerce #respond input#submit.alt, .woocommerce a.button.alt, .woocommerce button.button.alt, .woocommerce input.button.alt {
+	background-color: #3B73B9;
+	border-bottom: 3px solid #003366;
+}
+.woocommerce #respond input#submit.alt:hover, .woocommerce a.button.alt:hover, .woocommerce button.button.alt:hover, .woocommerce input.button.alt:hover {
+  background-color: #3366cc;
+  color: #fff;
+}
+
+/**
+ * Sidebar & Widgets
+ * ----------------------------------------------------------------------------
+ */
+ 
+.widget {
+	background-color: transparent;
+}
+
+/* =NGG Gallery
+-------------------------------------------------------------- */
+
+.ngg-gallery-thumbnail img {
+border: 0px !important;
+margin: 4px 0px 4px 0px !important;
+padding: 0px !important;
+
+}
+.ngg-gallery-thumbnail-box {
+margin-right: 0px !important;
+}
+
+.ngg-galleryoverview {
+	margin:0 !important;
+}
+
+/* =Catlist
+-------------------------------------------------------------- */
+
+ul.lcp_catlist {list-style-type: none;padding: 0px;margin:0px 0px;}
+ul.lcp_catlist li {margin:0 0 24px 0;border-top:1px solid #ccc;}
+ul.lcp_catlist li .lcp_review {clear:both;font-weight: bold;display:block;}
+ul.lcp_catlist li h2 {padding-top:0px;margin:0px;border-top:solid 0px #ccc;text-decoration:none;}
+ul.lcp_catlist li h2 a {text-decoration:none;}
+.lcp_title {display:none;}
+.lcp_date {font-size:75%;}
