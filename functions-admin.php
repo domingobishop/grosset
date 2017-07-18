@@ -16,9 +16,30 @@ function woo_reports_admin_page() {
             <?php
             wp_nonce_field('woo_reports_admin');
             if (isset($_POST['submit-woo-reports']) && check_admin_referer('woo_reports_admin')) {
-                get_woo_orders_by_date();
+                get_woo_orders_by_date($_POST['start_date'], $_POST['end_date'], $_POST['date_type']);
             }
             ?>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row"><label for="start_date">Start date</label></th>
+                    <td><input type="date" name="start_date" value="" /></td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><label for="end_date">End date</label></th>
+                    <td><input type="date" name="end_date" value="" /></td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><label for="date_type">Status</label></th>
+                    <td>
+                        <select name="date_type">
+                            <option value="date_created">Created</option>
+                            <option value="date_modified">Modified</option>
+                            <option value="date_completed">Completed</option>
+                            <option value="date_paid">Paid</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
             <p class="submit">
                 <input type="submit" name="submit-woo-reports" id="submit" class="button button-primary" value="Submit">
             </p>
@@ -99,7 +120,7 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
     $payment_methods_count = array_count_values($payment_methods);
 
     echo '<table width="100%">';
-    echo '<tr><th>Method</th><th>Count</th><th>Total</th></tr>';
+    echo '<tr><th>Payment method</th><th>Number of orders</th><th>Total</th></tr>';
     foreach ( $payment_methods_count as $key => $value ) {
         echo '<tr>';
         echo '<td>'.$key.'</td>';
