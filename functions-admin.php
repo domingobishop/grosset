@@ -2,7 +2,6 @@
 
 add_action('admin_menu', 'woo_reports_menu');
 
-add_action('admin_menu', 'woo_reports_menu');
 function woo_reports_menu() {
     add_menu_page( 'Woo report settings', 'Woo reports', 'administrator', 'woo-reports-admin-page', 'woo_reports_admin_page', 'dashicons-cloud', 21  );
 }
@@ -30,38 +29,6 @@ function woo_reports_admin_page() {
 
 function get_woo_orders() {
 
-    /*$customer_orders = get_posts( array(
-        'numberposts'    => -1,
-        'post_type' => 'shop_order',
-        'post_status'    => array_keys( wc_get_order_statuses() )
-    ) );
-
-    // Going through each current customer orders
-    foreach ( $customer_orders as $customer_order ) {
-
-        // Getting Order ID, title and status
-        $order_id = $customer_order->ID;
-        $order_title = $customer_order->post_title;
-        $order_status = $customer_order->post_status;
-
-        // Displaying Order ID, title and status
-        echo '<p>Order ID : ' . $order_id . '<br>';
-        echo 'Order title: ' . $order_title . '<br>';
-        echo 'Order status: ' . $order_status . '<br>';
-
-        // Getting an instance of the order object
-        $order = wc_get_order( $order_id );
-
-        // Going through each current customer order items
-        foreach($order->get_items() as $item_id => $item_values){
-            // Getting the product ID
-            $product_id = $item_values['product_id'];
-            // displaying the product ID
-            echo '<p>Product ID: '.$product_id.'</p>';
-        }
-    }*/
-
-    echo '-------<br>';
     $args = array(
         'type' => 'shop_order',
         'status' => 'completed',
@@ -78,11 +45,15 @@ function get_woo_orders() {
 
         echo '<p>';
 
+        $order_id = $order_data['id'];
+        $order_date_created = $order_data['date_created']->date('Y-m-d H:i:s');
         $order_billing_first_name = $order_data['billing']['first_name'];
         $order_billing_last_name = $order_data['billing']['last_name'];
         $order_total = $order_data['total'];
         $order_payment_method = $order_data['payment_method'];
 
+        echo $order_id.'<br>';
+        echo $order_date_created.'<br>';
         echo $order_billing_first_name.'<br>';
         echo $order_billing_last_name.'<br>';
         echo $order_total.'<br>';
