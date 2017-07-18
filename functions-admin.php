@@ -11,6 +11,16 @@ function woo_reports_admin_page() {
     }
     ?>
     <div class="wrap">
+        <style type="text/css">
+            .woo-report table {
+                border-collapse: collapse;
+            }
+            .woo-report th, .woo-report td {
+                border: 1px solid grey;
+                text-align: left;
+                padding: 7px;
+            }
+        </style>
         <h1>Woo reports</h1>
         <form method="post" action="admin.php?page=woo-reports-admin-page" novalidate="novalidate">
             <?php
@@ -22,11 +32,11 @@ function woo_reports_admin_page() {
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row"><label for="start_date">Start date</label></th>
-                    <td><input type="date" name="start_date" value="" /></td>
+                    <td><input type="date" name="start_date" value="<?php echo (isset($_POST['start_date'])) ? $_POST['start_date'] : '' ?>" /></td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="end_date">End date</label></th>
-                    <td><input type="date" name="end_date" value="" /></td>
+                    <td><input type="date" name="end_date" value="<?php echo (isset($_POST['end_date'])) ? $_POST['end_date'] : '' ?>" /></td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="date_type">Status</label></th>
@@ -119,7 +129,7 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
 
     $payment_methods_count = array_count_values($payment_methods);
 
-    echo '<table width="100%">';
+    echo '<table width="100%" class="woo-report">';
     echo '<tr><th>Payment method</th><th>Number of orders</th><th>Total</th></tr>';
     foreach ( $payment_methods_count as $key => $value ) {
         echo '<tr>';
