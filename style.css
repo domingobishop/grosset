@@ -9,15 +9,15 @@ Version:        0.3.0
 License:		Creative Commons Attribution-Share Alike 3.0 (http://creativecommons.org/licenses/by-sa/3.0/. Feel free to make any changes.
 */
 
-@import url("css/bootstrap.min.css");
-@import url("../twentythirteen/style.css");
+@import url('css/bootstrap.min.css');
+@import url('../twentythirteen/style.css');
 
 /**
  * Global
  * ----------------------------------------------------------------------------
  */
- 
- body {
+
+body {
 	font-family: "Open Sans", Helvetica, Arial, sans-serif, sansserif;
 	/*The weights are 300 (light), 400 (normal), 600 (semibold), and 700 (bold) and the only acceptable CSS keyword is "normal". */
 	text-rendering: optimizeLegibility;
@@ -26,9 +26,15 @@ License:		Creative Commons Attribution-Share Alike 3.0 (http://creativecommons.o
 	line-height: 1.5;
 }
 html, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
-    font-family: "Open Sans", Helvetica, Arial, sans-serif, sansserif;	 
+	font-family: "Open Sans", Helvetica, Arial, sans-serif, sansserif;
 }
 a, a:hover, a:focus, a:active, a:visited, .entry-title a, .entry-title a:hover, .entry-meta a, .entry-meta a:hover, .site-footer .widget a {
+	color: #3B73B9;
+}
+aside a, aside a:visited, aside a:hover, aside a:focus {
+	color: #3B73B9 !important;
+}
+.entry-content a, .entry-content a:visited, .entry-content a:hover, aside a:focus {
 	color: #3B73B9 !important;
 }
 h1 {
@@ -46,9 +52,9 @@ button, input, textarea {
 	border: 2px solid #eee;
 }
 button:hover, button:focus, input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:focus, input[type="button"]:focus, input[type="reset"]:focus, button:active, input[type="submit"]:active, input[type="button"]:active, input[type="reset"]:active {
-  background: #3366cc;
-  border: none;
-  border-bottom: 3px solid #003366;
+	background: #3366cc;
+	border: none;
+	border-bottom: 3px solid #003366;
 }
 
 /**
@@ -58,17 +64,17 @@ button:hover, button:focus, input[type="submit"]:hover, input[type="button"]:hov
 
 h1, h2, h3, h4, p, ul, li, ol, dl, blockquote, .post-statement, .statement {
 	-webkit-hyphens: none;
-   -moz-hyphens: none;
+	-moz-hyphens: none;
 	-ms-hyphens:none;
 	hyphens: none;
 	word-break: keep-all;
 }
 
 .site-content article {
-   word-wrap: normal;
-  -webkit-hyphens: none;
-  -moz-hyphens: none;
-   hyphens: none;
+	word-wrap: normal;
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	hyphens: none;
 }
 
 .widget-area .widget {
@@ -211,7 +217,7 @@ ul.nav-menu, div.nav-menu > ul {
  * Footer
  * ----------------------------------------------------------------------------
  */
- 
+
 .site-footer .widget-area, .sidebar .site-footer {
 	text-align: center;
 }
@@ -230,10 +236,13 @@ ul.nav-menu, div.nav-menu > ul {
 .site-footer .widget .widget-title {
 	font: 300 normal 20px "Source Sans Pro", Helvetica, sans-serif;
 }
-.site-footer p img {
-	
+.site-footer .widget {
+	text-align: left;
 }
- 
+.site-footer .widget li {
+	border-top: dotted 1px #fff;
+}
+
 /**
  * Home
  * ----------------------------------------------------------------------------
@@ -264,9 +273,9 @@ element.style {
 	padding: 18px 12px;
 }
 .mbox p {
-	min-height: 72px;
+	min-height: 36px;
 }
-.mbox a, .mbox a:visited, a.btn-default, a:visited.btn-default {
+.mbox a, .mbox a:visited, a.btn-default, a:visited.btn-default, a:hover.btn-default {
 	color: #fff !important;
 }
 
@@ -277,21 +286,21 @@ element.style {
 
 .col-wine {
 	float: left;
-	width: 11.111%;
+	width: 10%;
 	position: relative;
 	min-height: 1px;
-	padding-left: 15px;
-	padding-right: 15px;
+	padding-left: 7px;
+	padding-right: 7px;
 }
 .wines {
 	width: 98%;
 	max-width: 1600px;
 }
 .col-wine h5 {
-		/* text-align: center; */
+	/* text-align: center; */
 }
 .col-wine a img {
-		margin: 0 auto;
+	margin: 0 auto;
 }
 @media (max-width: 992px) {
 	.wines h5 {
@@ -324,35 +333,48 @@ element.style {
  * Page & Posts
  * ----------------------------------------------------------------------------
  */
- 
- .page, .post {
-	 min-height: 550px;
- }
- .no-sidebar .entry-header, .no-sidebar .entry-content, .no-sidebar .entry-summary, .no-sidebar .entry-meta {
-  max-width: 1040px;
-  padding: 0 60px 0 60px;
+
+.page, .post {
+	min-height: 550px;
 }
 .no-sidebar .entry-header, .no-sidebar .entry-content, .no-sidebar .entry-summary, .no-sidebar .entry-meta {
-  max-width: 1040px;
-  padding: 0 60px 0 60px;
+	max-width: 1040px;
+	padding: 0 60px 0 60px;
+}
+.no-sidebar .entry-header, .no-sidebar .entry-content, .no-sidebar .entry-summary, .no-sidebar .entry-meta {
+	max-width: 1040px;
+	padding: 0 60px 0 60px;
 }
 .wcopc .product-name, .wcopc .amount {
-  font-size: 18px;
+	font-size: 18px;
 }
 .woocommerce #respond input#submit.alt, .woocommerce a.button.alt, .woocommerce button.button.alt, .woocommerce input.button.alt {
 	background-color: #3B73B9;
 	border-bottom: 3px solid #003366;
 }
 .woocommerce #respond input#submit.alt:hover, .woocommerce a.button.alt:hover, .woocommerce button.button.alt:hover, .woocommerce input.button.alt:hover {
-  background-color: #3366cc;
-  color: #fff;
+	background-color: #3366cc;
+	color: #fff;
+}
+.woocommerce .order_details {
+	padding: 0;
+}
+.woocommerce input.button {
+	margin-top: 1em;
+}
+
+.entry-content input[type="button"] .logout {
+	color: #3B73B9;
+}
+figure.wp-caption.alignright, img.alignright {
+	margin: 5px 0 25px 25px;
 }
 
 /**
  * Sidebar & Widgets
  * ----------------------------------------------------------------------------
  */
- 
+
 .widget {
 	background-color: transparent;
 }
@@ -361,13 +383,13 @@ element.style {
 -------------------------------------------------------------- */
 
 .ngg-gallery-thumbnail img {
-border: 0px !important;
-margin: 4px 0px 4px 0px !important;
-padding: 0px !important;
+	border: 0px !important;
+	margin: 4px 0px 4px 0px !important;
+	padding: 0px !important;
 
 }
 .ngg-gallery-thumbnail-box {
-margin-right: 0px !important;
+	margin-right: 0px !important;
 }
 
 .ngg-galleryoverview {
@@ -384,3 +406,31 @@ ul.lcp_catlist li h2 {padding-top:0px;margin:0px;border-top:solid 0px #ccc;text-
 ul.lcp_catlist li h2 a {text-decoration:none;}
 .lcp_title {display:none;}
 .lcp_date {font-size:75%;}
+
+.woocommerce ul.products li.product h3 {
+	min-height: 76px;
+}
+.woocommerce #respond input#submit.alt, .woocommerce a.button.alt, .woocommerce button.button.alt, .woocommerce input.button.alt {
+	color: #fff;
+}
+.woocommerce-main-image {display:none;}
+
+#customer_details .col-1, #customer_details .col-2 {width:100%;}
+
+.wp-caption .wp-caption-text, .entry-caption, .gallery-caption {
+	margin: 0 0 14px;
+}
+.member-login {
+	max-width: 1040px;
+	padding: 7px 60px;
+	margin: 0 auto;
+	text-align: right;
+	font-size: 80%;
+	background-color: #eee;
+}
+.home .member-login {
+	display:none;
+}
+.products-list .img {
+	display: none;
+}

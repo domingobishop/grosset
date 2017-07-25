@@ -12,7 +12,7 @@ function woo_reports_admin_page() {
     ?>
     <div class="wrap">
         <style type="text/css">
-            .woo-report table {
+            table.woo-report {
                 border-collapse: collapse;
             }
             .woo-report th, .woo-report td {
@@ -98,6 +98,7 @@ function get_woo_orders() {
 function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-07-18', $date_type = 'date_created' ) {
 
     $args = array(
+        'limit' => -1,
         'type' => 'shop_order',
         'status' => 'completed',
         'orderby' => 'modified',
