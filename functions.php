@@ -27,7 +27,7 @@ function my_password_form() {
 }
 add_filter( 'the_password_form', 'my_password_form' );
 
-// Display 24 products per page. Goes in functions.php
+// Display 24 products per page
 add_filter( 'loop_shop_per_page', create_function( '$cols', 'return 24;' ), 20 );
 
 add_filter('woocommerce_get_catalog_ordering_args', 'am_woocommerce_catalog_orderby');
