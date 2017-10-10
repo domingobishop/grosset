@@ -108,6 +108,8 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
     );
     $orders = wc_get_orders( $args );
 
+    $report = array();
+
     $total = array();
 
     $payment_methods = array();
@@ -119,9 +121,17 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
 
         $order_data = $order->get_data();
 
-        echo '<pre>';
-        print_r($order->get_meta('_pos_store_title'));
-        echo '</pre>';
+        // echo '<pre>';
+        // print_r($order->get_meta('_pos_store_title'));
+        // echo '</pre>';
+
+        if ($order->get_meta('_pos_store_title')) {
+            $store = $order->get_meta('_pos_store_title');
+        } else {
+            $store = 'Online';
+        }
+
+        $product_items = array();
 
         foreach ($order->get_items() as $key => $lineItem) {
 
@@ -129,7 +139,7 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
 
             // uncomment the following to see the full data
             //        echo '<pre>';
-            //        print_r($lineItem);
+            //       print_r($lineItem);
             //        echo '</pre>';
             echo '<br>' . 'Product Name : ' . $lineItem['name'] . '<br>';
             echo 'Product ID : ' . $lineItem['product_id'] . '<br>';
@@ -139,7 +149,14 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
             } else {
                 echo 'Product Type : Simple Product' . '<br>';
             }
+            $product_items[$lineItem['product_id']]['product_sku'] = $product->get_sku();
+            $product_items[$lineItem['product_id']]['quantity'] = $lineItem['quantity'];
+            $product_items[$lineItem['product_id']]['total'] = $lineItem['total'];
         }
+
+        $order_date_completed = $order_data['date_completed']->date('Y-m-d');
+
+        $report[$store][$order_date_completed][$order_id] = $product_items;
 
         $order_total = $order_data['total'];
         $order_payment_method = $order_data['payment_method_title'];
@@ -151,6 +168,10 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
         $total[$order_payment_method] = $order_payment_method_total;
 
     }
+
+    echo '<pre>';
+    print_r($report);
+    echo '</pre>';
 
     $payment_methods_count = array_count_values($payment_methods);
 
