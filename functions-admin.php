@@ -113,9 +113,35 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
     $payment_methods = array();
 
     foreach($orders as $order_id){
-        $order = wc_get_order( $order_id );
+        // $order = wc_get_order( $order_id );
+
+        $order = new WC_Order($order_id);
 
         $order_data = $order->get_data();
+
+        // var_dump($order_data['line_items']); echo '<br>-----<br>';
+
+        // foreach ($order_data['line_items'] as $line_item) {
+        //     var_dump($line_item); echo '<br>-----<br>';
+        // }
+
+        foreach ($order->get_items() as $key => $lineItem) {
+
+            $product = wc_get_product($lineItem['product_id']);
+
+            //uncomment the following to see the full data
+            //        echo '<pre>';
+            //        print_r($lineItem);
+            //        echo '</pre>';
+            echo '<br>' . 'Product Name : ' . $lineItem['name'] . '<br>';
+            echo 'Product ID : ' . $lineItem['product_id'] . '<br>';
+            echo 'Sku : ' . $product->get_sku() . '<br>';
+            if ($lineItem['variation_id']) {
+                echo 'Product Type : Variable Product' . '<br>';
+            } else {
+                echo 'Product Type : Simple Product' . '<br>';
+            }
+        }
 
         $order_total = $order_data['total'];
         $order_payment_method = $order_data['payment_method_title'];
@@ -141,4 +167,6 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
     }
     echo '</table>';
 }
+
+
 
