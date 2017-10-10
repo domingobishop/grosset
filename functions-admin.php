@@ -119,17 +119,9 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
 
         $order_data = $order->get_data();
 
-        // echo '<pre>';
-        // print_r($order->get_meta_data());
-        // echo '</pre>';
-
-         foreach ($order->get_meta_data() as $data) {
-             if ( $data->key == '_pos_store_title' ) {
-                 echo '<pre>';
-                 echo $data->value;
-                 echo '</pre>';
-             }
-        }
+        echo '<pre>';
+        print_r($order->get_meta('_pos_store_title'));
+        echo '</pre>';
 
         foreach ($order->get_items() as $key => $lineItem) {
 
