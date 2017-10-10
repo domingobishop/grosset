@@ -139,19 +139,27 @@ function get_woo_orders_by_date( $start_date = '2017-07-17', $end_date = '2017-0
 
     }
 
-    echo '<table width="100%" class="woo-report">';
-    echo '<tr><th>POS store</th><th>Date</th><th>SKU</th><th>Quantity</th><th>Total</th></tr>';
+
     foreach ( $report as $store => $store_value ) {
 
         foreach ( $store_value as $date => $date_value ) {
+
+            echo '<h4>'.$store.' '.$date.'</h4>';
+
+            echo '<table width="100%" class="woo-report">';
+            echo '<tr><th>SKU</th><th>Quantity</th><th>Total</th></tr>';
 
             foreach ( $date_value as $order => $order_value) {
 
                 foreach ( $order_value as $key => $value ) {
 
+                    // echo '- '.$value['product_sku'].'<br>';
+                    // echo '- '.$value['quantity'].'<br>';
+                    // echo '- '.$value['total'].'<br>';
+
                     echo '<tr>';
-                    echo '<td>'.$store.'</td>';
-                    echo '<td>'.$date.'</td>';
+                    // echo '<td>'.$store.'</td>';
+                    // echo '<td>'.$date.'</td>';
                     echo '<td>'.$value['product_sku'].'</td>';
                     echo '<td>'.$value['quantity'].'</td>';
                     echo '<td>'.$value['total'].'</td>';
@@ -165,9 +173,9 @@ function get_woo_orders_by_date( $start_date = '2017-07-17', $end_date = '2017-0
 
             }
 
+            echo '</table>';
         }
     }
-    echo '</table>';
 }
 
 
