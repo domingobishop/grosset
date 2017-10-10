@@ -26,7 +26,7 @@ function woo_reports_admin_page() {
             <?php
             wp_nonce_field('woo_reports_admin');
             if (isset($_POST['submit-woo-reports']) && check_admin_referer('woo_reports_admin')) {
-                get_woo_orders_by_date($_POST['start_date'], $_POST['end_date'], $_POST['date_type']);
+                get_woo_orders_by_date($_POST['start_date'], $_POST['end_date']);
             }
             ?>
             <table class="form-table">
@@ -37,17 +37,6 @@ function woo_reports_admin_page() {
                 <tr valign="top">
                     <th scope="row"><label for="end_date">End date</label></th>
                     <td><input type="date" name="end_date" value="<?php echo (isset($_POST['end_date'])) ? $_POST['end_date'] : '' ?>" /></td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><label for="date_type">Status</label></th>
-                    <td>
-                        <select name="date_type">
-                            <option value="date_created">Created</option>
-                            <option value="date_modified">Modified</option>
-                            <option value="date_completed">Completed</option>
-                            <option value="date_paid">Paid</option>
-                        </select>
-                    </td>
                 </tr>
             </table>
             <p class="submit">
@@ -95,7 +84,10 @@ function get_woo_orders() {
     }
 }
 
-function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-07-18', $date_type = 'date_created' ) {
+function get_woo_orders_by_date( $start_date = '2017-07-17', $end_date = '2017-07-18' ) {
+
+    $start_date = strtotime($start_date.' 00:00:00' );
+    $end_date = strtotime($end_date.' 23:59:59' );
 
     $args = array(
         'limit' => -1,
@@ -104,18 +96,13 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
         'orderby' => 'modified',
         'order' => 'DESC',
         'return' => 'ids',
-        $date_type => $start_date.'...'.$end_date,
+        'date_completed' => $start_date.'...'.$end_date,
     );
     $orders = wc_get_orders( $args );
 
     $report = array();
 
-    $total = array();
-
-    $payment_methods = array();
-
     foreach($orders as $order_id){
-        // $order = wc_get_order( $order_id );
 
         $order = new WC_Order($order_id);
 
@@ -127,6 +114,9 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
 
         if ($order->get_meta('_pos_store_title')) {
             $store = $order->get_meta('_pos_store_title');
+            if ( $store == '' ) {
+                $store = 'Online';
+            }
         } else {
             $store = 'Online';
         }
@@ -137,18 +127,7 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
 
             $product = wc_get_product($lineItem['product_id']);
 
-            // uncomment the following to see the full data
-            //        echo '<pre>';
-            //       print_r($lineItem);
-            //        echo '</pre>';
-            echo '<br>' . 'Product Name : ' . $lineItem['name'] . '<br>';
-            echo 'Product ID : ' . $lineItem['product_id'] . '<br>';
-            echo 'Sku : ' . $product->get_sku() . '<br>';
-            if ($lineItem['variation_id']) {
-                echo 'Product Type : Variable Product' . '<br>';
-            } else {
-                echo 'Product Type : Simple Product' . '<br>';
-            }
+            $product_items[$lineItem['product_id']]['product_name'] = $lineItem['name'];
             $product_items[$lineItem['product_id']]['product_sku'] = $product->get_sku();
             $product_items[$lineItem['product_id']]['quantity'] = $lineItem['quantity'];
             $product_items[$lineItem['product_id']]['total'] = $lineItem['total'];
@@ -158,31 +137,35 @@ function get_woo_orders_by_date( $start_date = '2012-07-18', $end_date = '2017-0
 
         $report[$store][$order_date_completed][$order_id] = $product_items;
 
-        $order_total = $order_data['total'];
-        $order_payment_method = $order_data['payment_method_title'];
-
-        $order_payment_method_total = $total[$order_payment_method] + $order_total;
-
-        array_push($payment_methods, $order_payment_method);
-
-        $total[$order_payment_method] = $order_payment_method_total;
-
     }
 
-    echo '<pre>';
-    print_r($report);
-    echo '</pre>';
-
-    $payment_methods_count = array_count_values($payment_methods);
-
     echo '<table width="100%" class="woo-report">';
-    echo '<tr><th>Payment method</th><th>Number of orders</th><th>Total</th></tr>';
-    foreach ( $payment_methods_count as $key => $value ) {
-        echo '<tr>';
-        echo '<td>'.$key.'</td>';
-        echo '<td>'.$value.'</td>';
-        echo '<td>'.money_format( '%(#10n', $total[$key]).'</td>';
-        echo '</tr>';
+    echo '<tr><th>POS store</th><th>Date</th><th>SKU</th><th>Quantity</th><th>Total</th></tr>';
+    foreach ( $report as $store => $store_value ) {
+
+        foreach ( $store_value as $date => $date_value ) {
+
+            foreach ( $date_value as $order => $order_value) {
+
+                foreach ( $order_value as $key => $value ) {
+
+                    echo '<tr>';
+                    echo '<td>'.$store.'</td>';
+                    echo '<td>'.$date.'</td>';
+                    echo '<td>'.$value['product_sku'].'</td>';
+                    echo '<td>'.$value['quantity'].'</td>';
+                    echo '<td>'.$value['total'].'</td>';
+                    echo '</tr>';
+
+                    // echo '<pre>';
+                    // print_r($value);
+                    // echo '</pre>';
+
+                }
+
+            }
+
+        }
     }
     echo '</table>';
 }
