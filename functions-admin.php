@@ -135,9 +135,9 @@ function get_woo_orders_by_date( $start_date = '2017-07-17', $end_date = '2017-0
 
     }
 
-    echo '<pre>';
-    print_r($report);
-    echo '</pre>';
+    // echo '<pre>';
+    // print_r($report);
+    // echo '</pre>';
 
 
     foreach ( $report as $store_date => $store_date_value ) {
