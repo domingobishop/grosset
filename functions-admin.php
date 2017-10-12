@@ -121,62 +121,65 @@ function get_woo_orders_by_date( $start_date = '2017-07-17', $end_date = '2017-0
             $store = 'Online';
         }
 
-        $product_items = array();
+        $order_date_completed = $order_data['date_completed']->date('Y-m-d');
 
         foreach ($order->get_items() as $key => $lineItem) {
 
             $product = wc_get_product($lineItem['product_id']);
 
-            $product_items[$lineItem['product_id']]['product_name'] = $lineItem['name'];
-            $product_items[$lineItem['product_id']]['product_sku'] = $product->get_sku();
-            $product_items[$lineItem['product_id']]['quantity'] = $lineItem['quantity'];
-            $product_items[$lineItem['product_id']]['total'] = $lineItem['total'];
+            $report[$store.' '.$order_date_completed][$order_id.$lineItem['product_id']]['product_name'] = $lineItem['name'];
+            $report[$store.' '.$order_date_completed][$order_id.$lineItem['product_id']]['product_sku'] = $product->get_sku();
+            $report[$store.' '.$order_date_completed][$order_id.$lineItem['product_id']]['quantity'] = $lineItem['quantity'];
+            $report[$store.' '.$order_date_completed][$order_id.$lineItem['product_id']]['total'] = $lineItem['total'];
         }
-
-        $order_date_completed = $order_data['date_completed']->date('Y-m-d');
-
-        $report[$store][$order_date_completed][$order_id] = $product_items;
 
     }
 
+    echo '<pre>';
+    print_r($report);
+    echo '</pre>';
 
-    foreach ( $report as $store => $store_value ) {
 
-        foreach ( $store_value as $date => $date_value ) {
+    foreach ( $report as $store_date => $store_date_value ) {
 
-            echo '<h4>'.$store.' '.$date.'</h4>';
+        echo '<h3>'.$store_date.'</h3>';
 
-            echo '<table width="100%" class="woo-report">';
-            echo '<tr><th>SKU</th><th>Quantity</th><th>Total</th></tr>';
+        echo '<table width="100%" class="woo-report">';
+        echo '<tr><th>SKU</th><th>Quantity</th><th>Total</th></tr>';
 
-            foreach ( $date_value as $order => $order_value) {
+        $total = 0;
+        $quantity = 0;
 
-                foreach ( $order_value as $key => $value ) {
+            foreach ( $store_date_value as $key => $value ) {
 
-                    // echo '- '.$value['product_sku'].'<br>';
-                    // echo '- '.$value['quantity'].'<br>';
-                    // echo '- '.$value['total'].'<br>';
+                // echo '- '.$value['product_sku'].'<br>';
+                // echo '- '.$value['quantity'].'<br>';
+                // echo '- '.$value['total'].'<br>';
 
-                    echo '<tr>';
-                    // echo '<td>'.$store.'</td>';
-                    // echo '<td>'.$date.'</td>';
-                    echo '<td>'.$value['product_sku'].'</td>';
-                    echo '<td>'.$value['quantity'].'</td>';
-                    echo '<td>'.$value['total'].'</td>';
-                    echo '</tr>';
+                echo '<tr>';
+                // echo '<td>'.$store.'</td>';
+                // echo '<td>'.$date.'</td>';
+                echo '<td>'.$value['product_sku'].'</td>';
+                echo '<td>'.$value['quantity'].'</td>';
+                echo '<td>'.$value['total']*1.1.'</td>';
+                echo '</tr>';
 
-                    // echo '<pre>';
-                    // print_r($value);
-                    // echo '</pre>';
+                $total = $total + ($value['total']*1.1);
+                $quantity = $quantity + $value['quantity'];
 
-                }
+                // echo '<pre>';
+                // print_r($value);
+                // echo '</pre>';
 
             }
 
-            echo '</table>';
-        }
+        echo '<tr>';
+        echo '<td><strong>Total</strong></td>';
+        echo '<td><strong>'.$quantity.'</strong></td>';
+        echo '<td><strong>'.$total.'</strong></td>';
+        echo '</tr>';
+        echo '</table>';
     }
+
 }
-
-
 
