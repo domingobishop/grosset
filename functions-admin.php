@@ -32,11 +32,11 @@ function woo_reports_admin_page() {
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row"><label for="start_date">Start date</label></th>
-                    <td><input type="date" name="start_date" value="<?php echo (isset($_POST['start_date'])) ? $_POST['start_date'] : '' ?>" /></td>
+                    <td><input type="date" name="start_date" value="<?php echo (isset($_POST['start_date'])) ? $_POST['start_date'] : '' ?>" /> Format DD/MM/YYYY</td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="end_date">End date</label></th>
-                    <td><input type="date" name="end_date" value="<?php echo (isset($_POST['end_date'])) ? $_POST['end_date'] : '' ?>" /></td>
+                    <td><input type="date" name="end_date" value="<?php echo (isset($_POST['end_date'])) ? $_POST['end_date'] : '' ?>" /> Format DD/MM/YYYY</td>
                 </tr>
             </table>
             <p class="submit">
@@ -135,10 +135,6 @@ function get_woo_orders_by_date( $start_date = '2017-07-17', $end_date = '2017-0
 
     }
 
-    // echo '<pre>';
-    // print_r($report);
-    // echo '</pre>';
-
 
     foreach ( $report as $store_date => $store_date_value ) {
 
@@ -150,26 +146,24 @@ function get_woo_orders_by_date( $start_date = '2017-07-17', $end_date = '2017-0
         $total = 0;
         $quantity = 0;
 
-            foreach ( $store_date_value as $key => $value ) {
+        usort($store_date_value, function($a, $b) {
+            return strcmp($a['product_sku'], $b['product_sku']);
+        });
 
-                // echo '- '.$value['product_sku'].'<br>';
-                // echo '- '.$value['quantity'].'<br>';
-                // echo '- '.$value['total'].'<br>';
+        foreach ( $store_date_value as $key => $value ) {
 
-                echo '<tr>';
-                // echo '<td>'.$store.'</td>';
-                // echo '<td>'.$date.'</td>';
-                echo '<td>'.$value['product_sku'].'</td>';
-                echo '<td>'.$value['quantity'].'</td>';
-                echo '<td>'.$value['total']*1.1.'</td>';
-                echo '</tr>';
+            echo '<tr>';
+            echo '<td>'.$value['product_sku'].'</td>';
+            echo '<td>'.$value['quantity'].'</td>';
+            echo '<td>'.round($value['total']*1.1,2).'</td>';
+            echo '</tr>';
 
-                $total = $total + ($value['total']*1.1);
-                $quantity = $quantity + $value['quantity'];
+            $total = $total + (round($value['total']*1.1,2));
+            $quantity = $quantity + $value['quantity'];
 
-                // echo '<pre>';
-                // print_r($value);
-                // echo '</pre>';
+            // echo '<pre>';
+            // print_r($value);
+            // echo '</pre>';
 
             }
 
