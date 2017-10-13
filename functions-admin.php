@@ -23,26 +23,26 @@ function woo_reports_admin_page() {
         </style>
         <h1>Woo reports</h1>
         <form method="post" action="admin.php?page=woo-reports-admin-page" novalidate="novalidate">
-            <?php
-            wp_nonce_field('woo_reports_admin');
-            if (isset($_POST['submit-woo-reports']) && check_admin_referer('woo_reports_admin')) {
-                get_woo_orders_by_date($_POST['start_date'], $_POST['end_date']);
-            }
-            ?>
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row"><label for="start_date">Start date</label></th>
-                    <td><input type="date" name="start_date" value="<?php echo (isset($_POST['start_date'])) ? $_POST['start_date'] : '' ?>" /> Format DD/MM/YYYY</td>
+                    <td><input type="date" name="start_date" value="<?php echo (isset($_POST['start_date'])) ? $_POST['start_date'] : '' ?>" /> Format dd/mm/yyyy</td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="end_date">End date</label></th>
-                    <td><input type="date" name="end_date" value="<?php echo (isset($_POST['end_date'])) ? $_POST['end_date'] : '' ?>" /> Format DD/MM/YYYY</td>
+                    <td><input type="date" name="end_date" value="<?php echo (isset($_POST['end_date'])) ? $_POST['end_date'] : '' ?>" /> Format dd/mm/yyyy</td>
                 </tr>
             </table>
             <p class="submit">
                 <input type="submit" name="submit-woo-reports" id="submit" class="button button-primary" value="Submit">
             </p>
         </form>
+        <?php
+        wp_nonce_field('woo_reports_admin');
+        if (isset($_POST['submit-woo-reports']) && check_admin_referer('woo_reports_admin')) {
+            get_woo_orders_by_date($_POST['start_date'], $_POST['end_date']);
+        }
+        ?>
     </div>
     <?php
 }
@@ -164,7 +164,11 @@ function display_report( $report ) {
     }
 }
 
-function get_woo_orders_by_date( $start_date = '2017-07-17', $end_date = '2017-07-18' ) {
+function get_woo_orders_by_date( $start_date, $end_date ) {
+
+    if ( $start_date == '' || $end_date == '' ) {
+        echo '<div><h3>Error: please complete all date fields</h3></div>';
+    }
 
     $start_date = strtotime($start_date.' 00:00:00' );
     $end_date = strtotime($end_date.' 23:59:59' );
