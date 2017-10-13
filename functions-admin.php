@@ -29,20 +29,29 @@ function woo_reports_admin_page() {
                 get_woo_orders_by_date($_POST['start_date'], $_POST['end_date']);
             }
             ?>
+            <h2>Daily reports</h2>
+            <p class="howto">Specify date range for the report</p>
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row"><label for="start_date">Start date</label></th>
-                    <td><input type="date" name="start_date" value="<?php echo (isset($_POST['start_date'])) ? $_POST['start_date'] : '' ?>" /> Format dd/mm/yyyy</td>
+                    <td>
+                        <input type="date" name="start_date" value="<?php echo (isset($_POST['start_date'])) ? $_POST['start_date'] : '' ?>" />
+                        <p class="howto">Date format dd/mm/yyyy</p>
+                    </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="end_date">End date</label></th>
-                    <td><input type="date" name="end_date" value="<?php echo (isset($_POST['end_date'])) ? $_POST['end_date'] : '' ?>" /> Format dd/mm/yyyy</td>
+                    <td>
+                        <input type="date" name="end_date" value="<?php echo (isset($_POST['end_date'])) ? $_POST['end_date'] : '' ?>" />
+                        <p class="howto">Date format dd/mm/yyyy</p>
+                    </td>
                 </tr>
             </table>
             <p class="submit">
                 <input type="submit" name="submit-woo-reports" id="submit" class="button button-primary" value="Export CSV">
             </p>
         </form>
+        <p class="howto">Custom coded reports for Grosset Wines by <a href="http://chrisbishop.me.uk" target="_blank">Chris Bishop</a></p>
     </div>
     <?php
 }
@@ -149,10 +158,6 @@ function display_report( $report ) {
             $total = $total + $grand_total;
             $quantity = $quantity + $value['quantity'];
 
-            // echo '<pre>';
-            // print_r($value);
-            // echo '</pre>';
-
         }
 
         echo '<tr>';
@@ -167,7 +172,7 @@ function display_report( $report ) {
 function get_woo_orders_by_date( $start_date, $end_date ) {
 
     if ( $start_date == '' || $end_date == '' ) {
-        echo '<div class="error notice is-dismissible"><h3>Error: please complete all date fields</h3></div>';
+        echo '<div class="error notice is-dismissible"><p><strong>Error</strong>: please complete all date fields</p></div>';
         return;
     }
 
@@ -175,7 +180,7 @@ function get_woo_orders_by_date( $start_date, $end_date ) {
     $end_date = strtotime($end_date.' 23:59:59' );
 
     if ( $start_date > $end_date ) {
-        echo '<div class="error notice is-dismissible"><h3>Error: start date cannot be set after the end date</h3></div>';
+        echo '<div class="error notice is-dismissible"><p><strong>Error</strong>: start date cannot be set after the end date</p></div>';
         return;
     }
 
@@ -246,7 +251,7 @@ function generate_woo_report_csv( $report ) {
 
         }
 
-        $row = array( 'Total', '', $quantity, $total );
+        $row = array( '', 'Total', $quantity, $total );
 
         fputcsv($output, $row);
     }
