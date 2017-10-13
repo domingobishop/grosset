@@ -40,7 +40,7 @@ function woo_reports_admin_page() {
                 </tr>
             </table>
             <p class="submit">
-                <input type="submit" name="submit-woo-reports" id="submit" class="button button-primary" value="Submit">
+                <input type="submit" name="submit-woo-reports" id="submit" class="button button-primary" value="Export CSV">
             </p>
         </form>
     </div>
@@ -167,14 +167,16 @@ function display_report( $report ) {
 function get_woo_orders_by_date( $start_date, $end_date ) {
 
     if ( $start_date == '' || $end_date == '' ) {
-        echo '<div><h3>Error: please complete all date fields</h3></div>';
+        echo '<div class="error notice is-dismissible"><h3>Error: please complete all date fields</h3></div>';
+        return;
     }
 
     $start_date = strtotime($start_date.' 00:00:00' );
     $end_date = strtotime($end_date.' 23:59:59' );
 
     if ( $start_date > $end_date ) {
-        echo '<div><h3>Error: start date cannot be set after the end date</h3></div>';
+        echo '<div class="error notice is-dismissible"><h3>Error: start date cannot be set after the end date</h3></div>';
+        return;
     }
 
     $args = array(
@@ -190,5 +192,64 @@ function get_woo_orders_by_date( $start_date, $end_date ) {
 
     $report = extract_products_from_orders( $orders );
 
-    display_report( $report );
+    // display_report( $report );
+
+    generate_woo_report_csv( $report );
+}
+
+function generate_woo_report_csv( $report ) {
+
+    ob_end_clean();
+
+    // output headers so that the file is downloaded rather than displayed
+    header('Content-type: text/csv');
+
+    // set file name with current date
+    header('Content-Disposition: attachment; filename=woo-report-' . date('Y-m-d') . '.csv');
+
+    // do not cache the file
+    header('Pragma: no-cache');
+    header('Expires: 0');
+
+    // create a file pointer connected to the output stream
+    $output = fopen('php://output', 'w');
+
+    // set the column headers for the csv
+    $headings = array( 'Store', 'SKU', 'Quantity', 'Total' );
+
+    // output the column headings
+    fputcsv( $output, $headings );
+
+    foreach ( $report as $store_date => $products ) {
+
+        $total = 0;
+        $quantity = 0;
+
+        usort($products, function($a, $b) {
+            return strcmp($a['product_sku'], $b['product_sku']);
+        });
+
+        $row = array( $store_date, '', '', '' );
+
+        fputcsv($output, $row);
+
+        foreach ( $products as $key => $value ) {
+
+            $total_w_tax = round($value['total']*1.1,2);
+
+            $row = array( '', $value['product_sku'], $value['quantity'], $total_w_tax );
+
+            fputcsv($output, $row);
+
+            $total = $total + $total_w_tax;
+            $quantity = $quantity + $value['quantity'];
+
+        }
+
+        $row = array( 'Total', '', $quantity, $total );
+
+        fputcsv($output, $row);
+    }
+
+    exit();
 }
