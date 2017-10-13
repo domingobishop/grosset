@@ -3,7 +3,7 @@
 add_action('admin_menu', 'woo_reports_menu');
 
 function woo_reports_menu() {
-    add_menu_page( 'Woo report settings', 'Woo reports', 'administrator', 'woo-reports-admin-page', 'woo_reports_admin_page', 'dashicons-cloud', 21  );
+    add_menu_page( 'Woo report settings', 'WooReports', 'administrator', 'woo-reports-admin-page', 'woo_reports_admin_page', 'dashicons-clipboard', 74  );
 }
 function woo_reports_admin_page() {
     if (!current_user_can('administrator'))  {
@@ -21,8 +21,14 @@ function woo_reports_admin_page() {
                 padding: 7px;
             }
         </style>
-        <h1>Woo reports</h1>
+        <h1>WooReports</h1>
         <form method="post" action="admin.php?page=woo-reports-admin-page" novalidate="novalidate">
+            <?php
+            wp_nonce_field('woo_reports_admin');
+            if (isset($_POST['submit-woo-reports']) && check_admin_referer('woo_reports_admin')) {
+                get_woo_orders_by_date($_POST['start_date'], $_POST['end_date']);
+            }
+            ?>
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row"><label for="start_date">Start date</label></th>
@@ -37,12 +43,6 @@ function woo_reports_admin_page() {
                 <input type="submit" name="submit-woo-reports" id="submit" class="button button-primary" value="Submit">
             </p>
         </form>
-        <?php
-        wp_nonce_field('woo_reports_admin');
-        if (isset($_POST['submit-woo-reports']) && check_admin_referer('woo_reports_admin')) {
-            get_woo_orders_by_date($_POST['start_date'], $_POST['end_date']);
-        }
-        ?>
     </div>
     <?php
 }
