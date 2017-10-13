@@ -84,33 +84,15 @@ function get_woo_orders() {
     }
 }
 
-function get_woo_orders_by_date( $start_date = '2017-07-17', $end_date = '2017-07-18' ) {
-
-    $start_date = strtotime($start_date.' 00:00:00' );
-    $end_date = strtotime($end_date.' 23:59:59' );
-
-    $args = array(
-        'limit' => -1,
-        'type' => 'shop_order',
-        'status' => 'completed',
-        'orderby' => 'modified',
-        'order' => 'DESC',
-        'return' => 'ids',
-        'date_completed' => $start_date.'...'.$end_date,
-    );
-    $orders = wc_get_orders( $args );
+function extract_products_from_orders( $orders ) {
 
     $report = array();
 
-    foreach($orders as $order_id){
+    foreach($orders as $order_id) {
 
         $order = new WC_Order($order_id);
 
         $order_data = $order->get_data();
-
-        // echo '<pre>';
-        // print_r($order->get_meta('_pos_store_title'));
-        // echo '</pre>';
 
         if ($order->get_meta('_pos_store_title')) {
             $store = $order->get_meta('_pos_store_title');
@@ -135,45 +117,74 @@ function get_woo_orders_by_date( $start_date = '2017-07-17', $end_date = '2017-0
 
     }
 
+    return $report;
+}
 
-    foreach ( $report as $store_date => $store_date_value ) {
+function display_report( $report ) {
+
+    foreach ( $report as $store_date => $products ) {
 
         echo '<h3>'.$store_date.'</h3>';
 
         echo '<table width="100%" class="woo-report">';
-        echo '<tr><th>SKU</th><th>Quantity</th><th>Total</th></tr>';
+        echo '<tr><th width="33.3%">SKU</th><th width="33.3%">Quantity</th><th width="33.3%">Total inc tax</th></tr>';
 
         $total = 0;
         $quantity = 0;
 
-        usort($store_date_value, function($a, $b) {
+        usort($products, function($a, $b) {
             return strcmp($a['product_sku'], $b['product_sku']);
         });
 
-        foreach ( $store_date_value as $key => $value ) {
+        foreach ( $products as $key => $value ) {
+
+            $grand_total = round($value['total']*1.1,2);
 
             echo '<tr>';
             echo '<td>'.$value['product_sku'].'</td>';
             echo '<td>'.$value['quantity'].'</td>';
-            echo '<td>'.round($value['total']*1.1,2).'</td>';
+            echo '<td>'.$grand_total.'</td>';
             echo '</tr>';
 
-            $total = $total + (round($value['total']*1.1,2));
+            $total = $total + $grand_total;
             $quantity = $quantity + $value['quantity'];
 
             // echo '<pre>';
             // print_r($value);
             // echo '</pre>';
 
-            }
+        }
 
         echo '<tr>';
-        echo '<td><strong>Total</strong></td>';
+        echo '<td><strong>Total inc tax</strong></td>';
         echo '<td><strong>'.$quantity.'</strong></td>';
         echo '<td><strong>'.$total.'</strong></td>';
         echo '</tr>';
         echo '</table>';
     }
-
 }
 
+function get_woo_orders_by_date( $start_date = '2017-07-17', $end_date = '2017-07-18' ) {
+
+    $start_date = strtotime($start_date.' 00:00:00' );
+    $end_date = strtotime($end_date.' 23:59:59' );
+
+    if ( $start_date > $end_date ) {
+        echo '<div><h3>Error: start date cannot be set after the end date</h3></div>';
+    }
+
+    $args = array(
+        'limit' => -1,
+        'type' => 'shop_order',
+        'status' => 'completed',
+        'orderby' => 'modified',
+        'order' => 'DESC',
+        'return' => 'ids',
+        'date_completed' => $start_date.'...'.$end_date,
+    );
+    $orders = wc_get_orders( $args );
+
+    $report = extract_products_from_orders( $orders );
+
+    display_report( $report );
+}
