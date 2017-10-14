@@ -2,12 +2,17 @@
 
 add_action('admin_menu', 'woo_reports_menu');
 
-function woo_reports_menu() {
-    add_menu_page( 'Woo report settings', 'WooReports', 'administrator', 'woo-reports-admin-page', 'woo_reports_admin_page', 'dashicons-clipboard', 74  );
+function woo_reports_menu()
+{
+    add_menu_page('Woo report settings', 'WooReports', 'administrator', 'woo-reports-admin-page', 'woo_reports_admin_page', 'dashicons-clipboard', 58);
 }
-function woo_reports_admin_page() {
-    if (!current_user_can('administrator'))  {
-        wp_die( __('You do not have sufficient pilchards to access this page.')    );
+
+function woo_reports_admin_page()
+{
+    if (!current_user_can('administrator')) {
+        if (!current_user_can('manage_woocommerce')) {
+            wp_die(__('You do not have sufficient pilchards to access this page.'));
+        }
     }
     ?>
     <div class="wrap">
@@ -15,6 +20,7 @@ function woo_reports_admin_page() {
             table.woo-report {
                 border-collapse: collapse;
             }
+
             .woo-report th, .woo-report td {
                 border: 1px solid grey;
                 text-align: left;
@@ -30,33 +36,38 @@ function woo_reports_admin_page() {
             }
             ?>
             <h2>Daily reports</h2>
-            <p class="howto">Specify date range for the report</p>
+            <p class="howto">Select a date range for the report</p>
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row"><label for="start_date">Start date</label></th>
                     <td>
-                        <input type="date" name="start_date" value="<?php echo (isset($_POST['start_date'])) ? $_POST['start_date'] : '' ?>" />
+                        <input type="date" name="start_date"
+                               value="<?php echo (isset($_POST['start_date'])) ? $_POST['start_date'] : '' ?>"/>
                         <p class="howto">Date format dd/mm/yyyy</p>
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="end_date">End date</label></th>
                     <td>
-                        <input type="date" name="end_date" value="<?php echo (isset($_POST['end_date'])) ? $_POST['end_date'] : '' ?>" />
+                        <input type="date" name="end_date"
+                               value="<?php echo (isset($_POST['end_date'])) ? $_POST['end_date'] : '' ?>"/>
                         <p class="howto">Date format dd/mm/yyyy</p>
                     </td>
                 </tr>
             </table>
             <p class="submit">
-                <input type="submit" name="submit-woo-reports" id="submit" class="button button-primary" value="Export CSV">
+                <input type="submit" name="submit-woo-reports" id="submit" class="button button-primary"
+                       value="Export CSV">
             </p>
         </form>
-        <p class="howto">Custom coded reports for Grosset Wines by <a href="http://chrisbishop.me.uk" target="_blank">Chris Bishop</a></p>
+        <p class="howto">Custom coded reports for Grosset Wines by <a href="http://chrisbishop.me.uk" target="_blank">Chris
+                Bishop</a></p>
     </div>
     <?php
 }
 
-function get_woo_orders() {
+function get_woo_orders()
+{
 
     $args = array(
         'type' => 'shop_order',
@@ -65,10 +76,10 @@ function get_woo_orders() {
         'order' => 'DESC',
         'return' => 'ids',
     );
-    $orders = wc_get_orders( $args );
+    $orders = wc_get_orders($args);
 
-    foreach($orders as $order_id){
-        $order = wc_get_order( $order_id );
+    foreach ($orders as $order_id) {
+        $order = wc_get_order($order_id);
 
         $order_data = $order->get_data();
 
@@ -81,23 +92,23 @@ function get_woo_orders() {
         $order_total = $order_data['total'];
         $order_payment_method = $order_data['payment_method'];
 
-        echo $order_id.'<br>';
-        echo $order_date_created.'<br>';
-        echo $order_billing_first_name.'<br>';
-        echo $order_billing_last_name.'<br>';
-        echo $order_total.'<br>';
-        echo $order_payment_method.'<br>';
-
+        echo $order_id . '<br>';
+        echo $order_date_created . '<br>';
+        echo $order_billing_first_name . '<br>';
+        echo $order_billing_last_name . '<br>';
+        echo $order_total . '<br>';
+        echo $order_payment_method . '<br>';
 
         echo '</p>';
     }
 }
 
-function extract_products_from_orders( $orders ) {
+function extract_products_from_orders($orders)
+{
 
     $report = array();
 
-    foreach($orders as $order_id) {
+    foreach ($orders as $order_id) {
 
         $order = new WC_Order($order_id);
 
@@ -105,7 +116,7 @@ function extract_products_from_orders( $orders ) {
 
         if ($order->get_meta('_pos_store_title')) {
             $store = $order->get_meta('_pos_store_title');
-            if ( $store == '' ) {
+            if ($store == '') {
                 $store = 'Online';
             }
         } else {
@@ -118,10 +129,10 @@ function extract_products_from_orders( $orders ) {
 
             $product = wc_get_product($lineItem['product_id']);
 
-            $report[$store.' '.$order_date_completed][$order_id.$lineItem['product_id']]['product_name'] = $lineItem['name'];
-            $report[$store.' '.$order_date_completed][$order_id.$lineItem['product_id']]['product_sku'] = $product->get_sku();
-            $report[$store.' '.$order_date_completed][$order_id.$lineItem['product_id']]['quantity'] = $lineItem['quantity'];
-            $report[$store.' '.$order_date_completed][$order_id.$lineItem['product_id']]['total'] = $lineItem['total'];
+            $report[$store . ' ' . $order_date_completed][$order_id . $lineItem['product_id']]['product_name'] = $lineItem['name'];
+            $report[$store . ' ' . $order_date_completed][$order_id . $lineItem['product_id']]['product_sku'] = $product->get_sku();
+            $report[$store . ' ' . $order_date_completed][$order_id . $lineItem['product_id']]['quantity'] = $lineItem['quantity'];
+            $report[$store . ' ' . $order_date_completed][$order_id . $lineItem['product_id']]['total'] = $lineItem['total'];
         }
 
     }
@@ -129,11 +140,12 @@ function extract_products_from_orders( $orders ) {
     return $report;
 }
 
-function display_report( $report ) {
+function display_report($report)
+{
 
-    foreach ( $report as $store_date => $products ) {
+    foreach ($report as $store_date => $products) {
 
-        echo '<h3>'.$store_date.'</h3>';
+        echo '<h3>' . $store_date . '</h3>';
 
         echo '<table width="100%" class="woo-report">';
         echo '<tr><th width="33.3%">SKU</th><th width="33.3%">Quantity</th><th width="33.3%">Total inc tax</th></tr>';
@@ -141,18 +153,18 @@ function display_report( $report ) {
         $total = 0;
         $quantity = 0;
 
-        usort($products, function($a, $b) {
+        usort($products, function ($a, $b) {
             return strcmp($a['product_sku'], $b['product_sku']);
         });
 
-        foreach ( $products as $key => $value ) {
+        foreach ($products as $key => $value) {
 
-            $grand_total = round($value['total']*1.1,2);
+            $grand_total = round($value['total'] * 1.1, 2);
 
             echo '<tr>';
-            echo '<td>'.$value['product_sku'].'</td>';
-            echo '<td>'.$value['quantity'].'</td>';
-            echo '<td>'.$grand_total.'</td>';
+            echo '<td>' . $value['product_sku'] . '</td>';
+            echo '<td>' . $value['quantity'] . '</td>';
+            echo '<td>' . $grand_total . '</td>';
             echo '</tr>';
 
             $total = $total + $grand_total;
@@ -162,24 +174,25 @@ function display_report( $report ) {
 
         echo '<tr>';
         echo '<td><strong>Total inc tax</strong></td>';
-        echo '<td><strong>'.$quantity.'</strong></td>';
-        echo '<td><strong>'.$total.'</strong></td>';
+        echo '<td><strong>' . $quantity . '</strong></td>';
+        echo '<td><strong>' . $total . '</strong></td>';
         echo '</tr>';
         echo '</table>';
     }
 }
 
-function get_woo_orders_by_date( $start_date, $end_date ) {
+function get_woo_orders_by_date($start_date, $end_date)
+{
 
-    if ( $start_date == '' || $end_date == '' ) {
+    if ($start_date == '' || $end_date == '') {
         echo '<div class="error notice is-dismissible"><p><strong>Error</strong>: please complete all date fields</p></div>';
         return;
     }
 
-    $start_date = strtotime($start_date.' 00:00:00' );
-    $end_date = strtotime($end_date.' 23:59:59' );
+    $start_date = strtotime($start_date . ' 00:00:00');
+    $end_date = strtotime($end_date . ' 23:59:59');
 
-    if ( $start_date > $end_date ) {
+    if ($start_date > $end_date) {
         echo '<div class="error notice is-dismissible"><p><strong>Error</strong>: start date cannot be set after the end date</p></div>';
         return;
     }
@@ -191,18 +204,19 @@ function get_woo_orders_by_date( $start_date, $end_date ) {
         'orderby' => 'modified',
         'order' => 'DESC',
         'return' => 'ids',
-        'date_completed' => $start_date.'...'.$end_date,
+        'date_completed' => $start_date . '...' . $end_date,
     );
-    $orders = wc_get_orders( $args );
+    $orders = wc_get_orders($args);
 
-    $report = extract_products_from_orders( $orders );
+    $report = extract_products_from_orders($orders);
 
     // display_report( $report );
 
-    generate_woo_report_csv( $report );
+    generate_woo_report_csv($report);
 }
 
-function generate_woo_report_csv( $report ) {
+function generate_woo_report_csv($report)
+{
 
     ob_end_clean();
 
@@ -220,29 +234,29 @@ function generate_woo_report_csv( $report ) {
     $output = fopen('php://output', 'w');
 
     // set the column headers for the csv
-    $headings = array( 'Store', 'SKU', 'Quantity', 'Total' );
+    $headings = array('Store', 'SKU', 'Quantity', 'Total');
 
     // output the column headings
-    fputcsv( $output, $headings );
+    fputcsv($output, $headings);
 
-    foreach ( $report as $store_date => $products ) {
+    foreach ($report as $store_date => $products) {
 
         $total = 0;
         $quantity = 0;
 
-        usort($products, function($a, $b) {
+        usort($products, function ($a, $b) {
             return strcmp($a['product_sku'], $b['product_sku']);
         });
 
-        $row = array( $store_date, '', '', '' );
+        $row = array($store_date, '', '', '');
 
         fputcsv($output, $row);
 
-        foreach ( $products as $key => $value ) {
+        foreach ($products as $key => $value) {
 
-            $total_w_tax = round($value['total']*1.1,2);
+            $total_w_tax = round($value['total'] * 1.1, 2);
 
-            $row = array( '', $value['product_sku'], $value['quantity'], $total_w_tax );
+            $row = array('', $value['product_sku'], $value['quantity'], $total_w_tax);
 
             fputcsv($output, $row);
 
@@ -251,7 +265,7 @@ function generate_woo_report_csv( $report ) {
 
         }
 
-        $row = array( '', 'Total', $quantity, $total );
+        $row = array('', 'Total', $quantity, $total);
 
         fputcsv($output, $row);
     }
