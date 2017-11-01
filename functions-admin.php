@@ -36,7 +36,8 @@ function woo_reports_admin_page()
             }
             ?>
             <h2>Daily reports</h2>
-            <p class="howto">Select a date range for the report</p>
+            <p class="howto">Please use a Chrome browser to generate the reports.</p>
+            <p class="howto">Select a date range for the report.</p>
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row"><label for="start_date">Start date</label></th>
@@ -123,16 +124,17 @@ function extract_products_from_orders($orders)
             $store = 'Online';
         }
 
-        $order_date_completed = $order_data['date_completed']->date('Y-m-d');
+        $order_date = $order_data['date_created']->date('Y-m-d');
 
         foreach ($order->get_items() as $key => $lineItem) {
 
             $product = wc_get_product($lineItem['product_id']);
 
-            $report[$store . ' ' . $order_date_completed][$order_id . $lineItem['product_id']]['product_name'] = $lineItem['name'];
-            $report[$store . ' ' . $order_date_completed][$order_id . $lineItem['product_id']]['product_sku'] = $product->get_sku();
-            $report[$store . ' ' . $order_date_completed][$order_id . $lineItem['product_id']]['quantity'] = $lineItem['quantity'];
-            $report[$store . ' ' . $order_date_completed][$order_id . $lineItem['product_id']]['total'] = $lineItem['total'];
+            $report[$store . ' ' . $order_date][$order_id . $lineItem['product_id']]['order_id'] = $order_id;
+            $report[$store . ' ' . $order_date][$order_id . $lineItem['product_id']]['product_name'] = $lineItem['name'];
+            $report[$store . ' ' . $order_date][$order_id . $lineItem['product_id']]['product_sku'] = $product->get_sku();
+            $report[$store . ' ' . $order_date][$order_id . $lineItem['product_id']]['quantity'] = $lineItem['quantity'];
+            $report[$store . ' ' . $order_date][$order_id . $lineItem['product_id']]['total'] = $lineItem['total'];
         }
 
     }
@@ -189,10 +191,10 @@ function get_woo_orders_by_date($start_date, $end_date)
         return;
     }
 
-    $start_date = strtotime($start_date . ' 00:00:00');
-    $end_date = strtotime($end_date . ' 23:59:59');
+    $start_date_test = strtotime( sanitize_text_field( $start_date ) . ' 00:00:00' );
+    $end_date_test = strtotime( sanitize_text_field( $end_date ) . ' 23:59:59' );
 
-    if ($start_date > $end_date) {
+    if ($start_date_test > $end_date_test) {
         echo '<div class="error notice is-dismissible"><p><strong>Error</strong>: start date cannot be set after the end date</p></div>';
         return;
     }
@@ -201,10 +203,10 @@ function get_woo_orders_by_date($start_date, $end_date)
         'limit' => -1,
         'type' => 'shop_order',
         'status' => 'completed',
-        'orderby' => 'modified',
-        'order' => 'DESC',
+        'orderby' => 'date',
+        'order' => 'ASC',
         'return' => 'ids',
-        'date_completed' => $start_date . '...' . $end_date,
+        'date_created' => $start_date . '...' . $end_date,
     );
     $orders = wc_get_orders($args);
 
@@ -256,7 +258,7 @@ function generate_woo_report_csv($report)
 
             $total_w_tax = round($value['total'] * 1.1, 2);
 
-            $row = array('', $value['product_sku'], $value['quantity'], $total_w_tax);
+            $row = array($value['order_id'], $value['product_sku'], $value['quantity'], $total_w_tax);
 
             fputcsv($output, $row);
 
