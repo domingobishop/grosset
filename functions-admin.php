@@ -31,8 +31,11 @@ function woo_reports_admin_page()
         <form method="post" action="admin.php?page=woo-reports-admin-page" novalidate="novalidate">
             <?php
             wp_nonce_field('woo_reports_admin');
+            if (isset($_POST['submit-woo-reports-csv']) && check_admin_referer('woo_reports_admin')) {
+                get_woo_orders_by_date($_POST['start_date'], $_POST['end_date'], 'csv');
+            }
             if (isset($_POST['submit-woo-reports']) && check_admin_referer('woo_reports_admin')) {
-                get_woo_orders_by_date($_POST['start_date'], $_POST['end_date']);
+                get_woo_orders_by_date($_POST['start_date'], $_POST['end_date'], 'view');
             }
             ?>
             <h2>Daily reports</h2>
@@ -57,8 +60,8 @@ function woo_reports_admin_page()
                 </tr>
             </table>
             <p class="submit">
-                <input type="submit" name="submit-woo-reports" id="submit" class="button button-primary"
-                       value="Export CSV">
+                <input type="submit" name="submit-woo-reports-csv" id="submit-csv" class="button button-primary" value="Export CSV">
+                <input type="submit" name="submit-woo-reports" id="submit" class="button button-primary" value="View report">
             </p>
         </form>
         <p class="howto">Custom coded reports for Grosset Wines by <a href="http://chrisbishop.me.uk" target="_blank">Chris
@@ -183,7 +186,7 @@ function display_report($report)
     }
 }
 
-function get_woo_orders_by_date($start_date, $end_date)
+function get_woo_orders_by_date($start_date, $end_date, $output)
 {
 
     if ($start_date == '' || $end_date == '') {
@@ -212,9 +215,11 @@ function get_woo_orders_by_date($start_date, $end_date)
 
     $report = extract_products_from_orders($orders);
 
-    // display_report( $report );
-
-    generate_woo_report_csv($report);
+    if ( $output == 'csv' ) {
+        generate_woo_report_csv($report);
+    } else {
+        display_report( $report );
+    }
 }
 
 function generate_woo_report_csv($report)
