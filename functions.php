@@ -58,3 +58,13 @@ function pos_new_css() {
 			.list-row .img, .cart-totals .cart-discount, .receipt-totals .cart-discount {display:none;}
 		  </style>';
 }
+
+add_filter( 'woocommerce_get_order_item_totals', 'reordering_order_item_totals', 10, 3 );
+function reordering_order_item_totals( $total_rows, $order, $tax_display ){
+
+    if ( $total_rows['discount'] ) {
+        $total_rows['discount']['label'] = '&nbsp;';
+    }
+
+    return $total_rows;
+}
