@@ -59,8 +59,8 @@ function pos_new_css() {
 		  </style>';
 }
 
-add_filter( 'woocommerce_get_order_item_totals', 'reordering_order_item_totals', 10, 3 );
-function reordering_order_item_totals( $total_rows, $order, $tax_display ){
+add_filter( 'woocommerce_get_order_item_totals', 'rename_discount_order_item', 10, 3 );
+function rename_discount_order_item( $total_rows, $order, $tax_display ){
 
     if ( $total_rows['discount'] ) {
         $total_rows['discount']['label'] = '&nbsp;';
