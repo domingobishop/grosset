@@ -12,25 +12,25 @@
 
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
-        <div class="item active" style="background: url(<?php bloginfo('stylesheet_directory'); ?>/img/slide1.jpg) no-repeat center center;background-size:cover;">
+        <div class="item active" style="background: url(<?php echo get_option('g_image_1'); ?>) no-repeat center center;background-size:cover;">
 
             <div class="carousel-caption">
-                <h3>The best thing about Grosset, is the sheer enthusiasm, utter commitment and genuine love for making something sublime and brilliant.</h3>
-                <p>Andrew Caillard MW, Langton's Classification of Australian Wine 2010</p>
+                <h3><?php echo get_option('g_quote_1'); ?></h3>
+                <p><?php echo get_option('g_source_1'); ?></p>
             </div>
         </div>
-        <div class="item" style="background: url(<?php bloginfo('stylesheet_directory'); ?>/img/slide2.jpg) no-repeat center center;background-size:cover;">
+        <div class="item" style="background: url(<?php echo get_option('g_image_2'); ?>) no-repeat center center;background-size:cover;">
 
             <div class="carousel-caption">
-                <h3>Grosset's pre-eminence in riesling making is recognised... however, he merits equal recognition for the other wines in his portfolio... These are all benchmarks.</h3>
-                <p>James Halliday, Australian Wine Companion, 2014 Edition</p>
+                <h3><?php echo get_option('g_quote_2'); ?></h3>
+                <p><?php echo get_option('g_source_2'); ?></p>
             </div>
         </div>
-        <div class="item" style="background: url(<?php bloginfo('stylesheet_directory'); ?>/img/slide3.jpg) no-repeat center center;background-size:cover;">
+        <div class="item" style="background: url(<?php echo get_option('g_image_3'); ?>) no-repeat center center;background-size:cover;">
 
             <div class="carousel-caption">
-                <h3>The undisputed monarch of Clare Valley is Jeffrey Grosset, whose 32-year reign has seen a raft of superlative wines set standards to which other winemakers can only aspire.</h3>
-                <p>Tyson Stelzer, Qantas Inflight Wine Guide 2012, Dec 2012</p>
+                <h3><?php echo get_option('g_quote_3'); ?></h3>
+                <p><?php echo get_option('g_source_3'); ?></p>
             </div>
         </div>
     </div>
