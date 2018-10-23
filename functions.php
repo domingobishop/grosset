@@ -1,6 +1,7 @@
 <?php
 
 include 'functions-admin.php';
+include 'function-options.php';
 
 // Password Protected Page Message
 
