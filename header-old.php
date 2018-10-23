@@ -28,6 +28,14 @@
 	<script src="<?php echo get_template_directory_uri(); ?>/js/html5.js"></script>
 	<![endif]-->
 
+
+    
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="<?php bloginfo('stylesheet_directory'); ?>/js/bootstrap.min.js"></script>
+
 	<?php wp_head(); ?>
 </head>
 
@@ -49,10 +57,11 @@
 					<li class="page_item page-item-200"><a href="<?php echo esc_url( home_url( '/' ) ); ?>about/">About</a></li>
 					<li class="page_item page-item-200"><a href="<?php echo esc_url( home_url( '/' ) ); ?>news/">News</a></li>
 					<li class="page_item page-item-200"><a href="<?php echo esc_url( home_url( '/' ) ); ?>contact/">Contact</a></li>
-					<li class="page_item page-item-200"><a href="<?php echo esc_url( home_url( '/' ) ); ?>members-online/">Members</a></li>
-					<li class="page_item page-item-200"><a href="<?php echo esc_url( home_url( '/' ) ); ?>contact/Grosset-Wine-Club-Member/">Join / Update</a></li>
+					<li class="page_item page-item-200"><a href="<?php echo esc_url( home_url( '/' ) ); ?>order/">Members</a></li>
+					<li class="page_item page-item-200"><a href="<?php echo esc_url( home_url( '/' ) ); ?>contact/become-a-member/">Join</a></li>
 					</ul>
 					</div>
+					<!-- <?php wp_nav_menu( array( 'theme_location' => 'primary', 'menu_class' => 'nav-menu' ) ); ?> -->
 				</nav><!-- #site-navigation -->
 			</div><!-- #navbar -->
 
@@ -73,12 +82,3 @@
 		</header><!-- #masthead -->
 
 		<div id="main" class="site-main">
-<div class="member-login">
-<?php
-if ( is_user_logged_in() ) {
-    echo 'Welcome Club Member, you are <strong>signed in</strong>. <a href="https://www.grosset.com.au/members-online/" class="btn btn-default btn-xs" role="button">Online store</a> <a href="https://www.grosset.com.au/my-account/" class="btn btn-default btn-xs" role="button">My account</a> <a href="https://www.grosset.com.au/my-account/customer-logout/" class="btn btn-default btn-xs" role="button">Sign out</a>';
-} else {
-    echo 'Grosset Wines Club Members <a href="https://www.grosset.com.au/my-account/" class="btn btn-default btn-xs" role="button">Sign in</a> | <a href="https://www.grosset.com.au/my-account/set-password/">Set password</a> | <a href="https://www.grosset.com.au/club-member/help/">Help</a>';
-}
-?>
-</div>

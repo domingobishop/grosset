@@ -27,14 +27,14 @@ function my_password_form() {
 }
 add_filter( 'the_password_form', 'my_password_form' );
 
-// Display 24 products per page
+// Display 24 products per page. Goes in functions.php
 add_filter( 'loop_shop_per_page', create_function( '$cols', 'return 24;' ), 20 );
 
 add_filter('woocommerce_get_catalog_ordering_args', 'am_woocommerce_catalog_orderby');
 function am_woocommerce_catalog_orderby( $args ) {
-    $args['orderby'] = 'meta_value';
-    $args['order'] = 'asc';
-    $args['meta_key'] = '_sku';
+    	$args['orderby'] = 'meta_value';
+	$args['order'] = 'asc';
+	$args['meta_key'] = '_sku';
 }
 
 /**
@@ -54,17 +54,96 @@ add_filter( 'woocommerce_min_password_strength', 'reduce_woocommerce_min_strengt
 add_action( 'woocommerce_pos_head', 'pos_new_css' );
 
 function pos_new_css() {
-    echo '<style id="pos-new-css">
+	echo '<style id="pos-new-css">
 			.list-row .img, .cart-totals .cart-discount, .receipt-totals .cart-discount {display:none;}
 		  </style>';
 }
 
-add_filter( 'woocommerce_get_order_item_totals', 'rename_discount_order_item', 10, 3 );
-function rename_discount_order_item( $total_rows, $order, $tax_display ){
-
+add_filter( 'woocommerce_get_order_item_totals', 'reordering_order_item_totals', 10, 3 );
+function reordering_order_item_totals( $total_rows, $order, $tax_display ){
+    
     if ( $total_rows['discount'] ) {
         $total_rows['discount']['label'] = '&nbsp;';
     }
 
     return $total_rows;
 }
+
+// export order additional function
+// Summary by Products , see conditions below! 
+// Format - CSV
+// Button - Export w/o Progressbar 
+class Woe_Summary_Products {
+	function __construct() {
+		$this->summary_products = array();
+		$this->products_data = array();
+		
+		add_action("woe_settings_above_buttons", array($this,"draw_summary_products") );
+		add_action("woe_order_export_started", array($this,'record_order_products') );
+		add_filter("woe_csv_custom_output_func", array($this,'skip_order_line')  );
+		add_action("woe_csv_print_footer", array($this,'print_summary_products') );
+	}
+
+	function draw_summary_products($settings){
+		$selected = !empty($settings[ 'summary_by_products' ]) ? 'checked': '';
+		$selected_2 = !empty($settings[ 'skip_orders' ]) ? 'checked': '';
+		echo '<br><br>
+		<input type=hidden name="settings[summary_by_products]" value="0">
+		<input type=checkbox name="settings[summary_by_products]" value="1" '. $selected .'>
+		<span class="wc-oe-header">Summary Report by products for CSV (Export w/o progressbar)</span>
+		<input type=hidden name="settings[skip_orders]" value="0">
+		<input type=checkbox name="settings[skip_orders]" value="1" '. $selected_2 .'>
+		Don\'t output orders 
+		<br><br>';
+	}
+
+	function record_order_products($order_id) {
+		if( empty(WC_Order_Export_Engine::$current_job_settings['summary_by_products']) )
+			return $order_id;
+		
+		$order  = new WC_Order($order_id);
+		foreach($order->get_items( ) as $item) {
+			$name = $item['name'];
+			if(!isset($this->summary_products[$name]))
+				$this->summary_products[$name] = 0;
+			$this->summary_products[$name] += $item['qty'];
+			
+			//gather common product details 
+			if( !isset($this->products_data[$name])) {
+				$product   = $order->get_product_from_item( $item );
+				$this->products_data[$name]['sku'] = $product ? $product->get_sku() : '';
+			}	
+		}
+                return $order_id;
+	}
+	
+	function skip_order_line($custom_export) {
+		if( !empty(WC_Order_Export_Engine::$current_job_settings['skip_orders']) )
+			return true;
+		return $custom_export;	
+	}
+	
+	function print_summary_products($f) {
+		if( empty(WC_Order_Export_Engine::$current_job_settings['summary_by_products']) )
+			return ;
+		
+		//empty line to split orders and summary
+		if( empty(WC_Order_Export_Engine::$current_job_settings['skip_orders']) ) {
+			fputcsv( $f,  array());
+		}	
+			
+		ksort($this->summary_products);// by name 
+		
+		$data = array("SKU","Product", "Quantity");
+		fputcsv( $f, $data);
+			
+		foreach($this->summary_products as $name=>$qty) {
+			$sku = $this->products_data[$name]['sku'];
+			$data = array($sku,$name,$qty);
+			fputcsv( $f, $data);
+		}
+	}
+}
+new Woe_Summary_Products ();
+
+?>
