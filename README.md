@@ -1,3 +1,3 @@
-# grosset3
+# grosset wines
 
-Grosset Wines WordPress theme v3
+Grosset Wines WordPress theme
