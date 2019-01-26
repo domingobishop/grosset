@@ -147,4 +147,84 @@ class Woe_Summary_Products {
 }
 new Woe_Summary_Products ();
 
-?>
+
+/**
+ * Disable comments
+ */
+
+function disable_comments_post_types_support() {
+    $post_types = get_post_types();
+    foreach ($post_types as $post_type) {
+        if(post_type_supports($post_type, 'comments')) {
+            remove_post_type_support($post_type, 'comments');
+            remove_post_type_support($post_type, 'trackbacks');
+        }
+    }
+}
+add_action('admin_init', 'disable_comments_post_types_support');
+
+function disable_comments_status() {
+    return false;
+}
+add_filter('comments_open', 'disable_comments_status', 20, 2);
+add_filter('pings_open', 'disable_comments_status', 20, 2);
+
+function disable_comments_hide_existing_comments($comments) {
+    $comments = array();
+    return $comments;
+}
+add_filter('comments_array', 'disable_comments_hide_existing_comments', 10, 2);
+
+function disable_comments_admin_menu() {
+    remove_menu_page('edit-comments.php');
+}
+add_action('admin_menu', 'disable_comments_admin_menu');
+
+function disable_comments_dashboard() {
+    remove_meta_box('dashboard_recent_comments', 'dashboard', 'normal');
+}
+add_action('admin_init', 'disable_comments_dashboard');
+
+function disable_comments_admin_bar() {
+    if (is_admin_bar_showing()) {
+        remove_action('admin_bar_menu', 'wp_admin_bar_comments_menu', 60);
+    }
+}
+add_action('init', 'disable_comments_admin_bar');
+
+function my_login_logo() { ?>
+    <style type="text/css">
+        #login h1 a, .login h1 a {
+            background-image: url(<?php echo get_stylesheet_directory_uri(); ?>/img/login-logo.png);
+            height:65px;
+            width:320px;
+            background-size: 300px 50px;
+            background-repeat: no-repeat;
+        }
+    </style>
+<?php }
+add_action( 'login_enqueue_scripts', 'my_login_logo' );
+
+function wpb_list_child_pages() {
+
+    global $post;
+
+    $string = '';
+
+    if ( is_page() && $post->post_parent ) {
+        $childpages = wp_list_pages( 'sort_column=menu_order&title_li=&child_of=' . $post->post_parent . '&echo=0&exclude=2208,1367,67,434,437,440,443,445,447,451,453,2206,1352,57,400,402,405,407,416,420,423,427,1709,724,53,371,374,378,381,385,387,390,393,934,1753,808,72,1746,802,48,295,298,301,318,326,328,332,334,1750,805,42,268,270,273,276,279,283,287,291,2219,1360,61,337,340,343,346,349,352,355,358,361' );
+    }
+    else {
+        $childpages = wp_list_pages( 'sort_column=menu_order&title_li=&child_of=' . $post->ID . '&echo=0&exclude=2208,1367,67,434,437,440,443,445,447,451,453,2206,1352,57,400,402,405,407,416,420,423,427,1709,724,53,371,374,378,381,385,387,390,393,934,1753,808,72,1746,802,48,295,298,301,318,326,328,332,334,1750,805,42,268,270,273,276,279,283,287,291,2219,1360,61,337,340,343,346,349,352,355,358,361' );
+    }
+
+    if ( $childpages ) {
+
+        $string = '<ul>' . $childpages . '</ul>';
+    }
+
+    return $string;
+
+}
+
+add_shortcode('wpb_childpages', 'wpb_list_child_pages');
