@@ -39,7 +39,7 @@
 
         gtag('config', 'UA-102007187-1');
     </script>
-    
+
 </head>
 
 <body <?php body_class(); ?>>
