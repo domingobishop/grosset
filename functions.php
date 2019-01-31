@@ -2,6 +2,7 @@
 
 include 'functions-admin.php';
 include 'function-options.php';
+include 'functions-forms.php';
 
 // Password Protected Page Message
 
