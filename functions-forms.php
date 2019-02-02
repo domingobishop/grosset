@@ -88,13 +88,19 @@ function members_form() {
                 <input type="text" id="message" name="message">
             </div>
             <div class="form-row">
+                <p><small><strong>Terms and conditions:</strong> By providing your contact details you subscribe to receive future special offers, wine release information 
+                    and items exclusive to members from Grosset Wines and from our agents until such time as you request us to stop. 
+                    Should you wish to opt out at any time simply let us know by phone or email. We will provide you with appropriate 
+                    contact details every time we contact you.</small></p>
+            </div>
+            <div class="form-row">
                 <input class="btn btn-primary btn-lg" type="submit" alt="Submit" name="member-submit" id="members-submit" value="Submit">
             </div>
         </fieldset>
     </form>
     ';
 
-    return $form;
+    return $form . disclaimer();
 }
 
 function call_back() {
@@ -268,4 +274,19 @@ function thanks( $name ) {
     ';
 
     return $thanks;
+}
+
+function disclaimer() {
+
+    $disclaimer = '
+    <p>We will acknowledge your request by return, and advise as soon as we have you signed up! 
+    There is currently a high demand to join the Grosset Wine Club so please allow 14 days for your 
+    membership to be confirmed.</p>
+    <p>As a Grosset Wine Club Member you will receive one <strong>Spring Release</strong> newsletter by post or 
+    email if no postal address is provided. In addition, 3-4 emails detailing our <strong>Autumn Release</strong> 
+    and <strong>Special Offers</strong> to members.</p>
+    <p>To remain a Grosset Wine Club Member you are required to purchase six bottles from us each year. That\'s all!</p>
+    ';
+
+    return $disclaimer;
 }
