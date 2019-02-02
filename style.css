@@ -437,7 +437,9 @@ display:none;
 a[title="Continue reading →"] { 
     display: none;
 }
-
+#members fieldset {
+	padding: 0;
+}
 .form-row {
 	max-width: 100%;
 	margin-bottom: 1.5em;

@@ -178,15 +178,19 @@ function call_back_shortcode() {
         <p>Telephone : '.$number.'</p>
         ';
 
-        echo '<p><strong>Thank you! Your request was sent successfully.</strong></p>';
+        echo '<div class="alert alert-success"><p><strong>Thank you! Your request was sent successfully.</strong></p></div>';
 
         $email_headers = 'From: Grosset Wines <sales@grosset.com.au>';
+
+        add_filter('wp_mail_content_type', function( $content_type ) {
+            return 'text/html';
+        });
 
         wp_mail( 'grossetsales@gmail.com', 'Membership call back request', $form_content, $email_headers );
         wp_mail( 'cb.creatistic@gmail.com', 'Membership call back request', $form_content, $email_headers );
 
     } else {
-        echo call_back();
+        return call_back();
     }
 }
 
@@ -243,11 +247,13 @@ function member_shortcode() {
         <p>Postcode : '.$postcode.'</p>
         ';
 
-        echo '<p><strong>Thank you! Your request was sent successfully.</strong></p>';
-
-        echo $form_content;
+        echo '<div class="alert alert-success"><p><strong>Thank you! Your request was sent successfully.</strong></p></div>';
 
         $email_headers = 'From: Grosset Wines <sales@grosset.com.au>';
+
+        add_filter('wp_mail_content_type', function( $content_type ) {
+            return 'text/html';
+        });
 
         wp_mail( 'grossetsales@gmail.com', 'Membership request', $form_content, $email_headers );
         wp_mail( 'cb.creatistic@gmail.com', 'Membership request', $form_content, $email_headers );
@@ -257,7 +263,7 @@ function member_shortcode() {
         wp_mail( $email, 'Thank you for signing up to join the Grosset Wine Club', $thanks, $email_headers );
 
     } else {
-        echo members_form();
+        return members_form();
     }
 }
 
